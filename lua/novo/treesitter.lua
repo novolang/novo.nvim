@@ -45,7 +45,15 @@ function M.setup(opts)
   if not url then return end   -- nothing to clone yet; see the note above
 
   configs.novo = {
-    install_info = { url = url, files = { "src/parser.c" }, branch = "main" },
+    -- scanner.c is NOT optional: novo is indentation-based, and the
+    -- external scanner is what emits INDENT, DEDENT and NEWLINE.  A
+    -- parser built from parser.c alone links, loads, and then fails to
+    -- parse anything with a block in it.
+    install_info = {
+      url = url,
+      files = { "src/parser.c", "src/scanner.c" },
+      branch = "main",
+    },
     filetype = "novo",
   }
 end
