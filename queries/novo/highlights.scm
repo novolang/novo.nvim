@@ -35,6 +35,7 @@
   "functional"
   "nfr"
   "constraint"
+  "pub"
 ] @keyword
 
 ; `else`, `pass`, `break`, `continue` are single-token rules so

@@ -72,32 +72,29 @@ optional reads `Some(97)` — from novo 0.8.6 onwards.
 
 ## Highlighting
 
-The queries ship here, under `queries/novo/`. The **parser** does not:
-`tree-sitter-novo` is built from the grammar in the toolchain's own
-repository, which does not have a repository of its own yet, so there is
-nothing for `nvim-treesitter` to clone. Until it does, build the
-parser from the grammar in a checkout of the novo repository:
+The queries ship here, under `queries/novo/`, vendored from
+[tree-sitter-novo](https://github.com/novolang/tree-sitter-novo). The
+parser comes from that repository, and nvim-treesitter can install it:
 
-```sh
-bash orbit/novo-treesitter/bin/install-nvim.sh
+```vim
+:TSInstall novo
 ```
 
-That writes `novo.so` into `~/.local/share/nvim/site/parser/`, which is
-all this plugin needs; the queries here are found by name and take
-effect on the next `.nv` file you open.
-
-**Rebuild the parser when you update this plugin.** The queries and the
-grammar move together, and a parser older than the queries fails with
-`Invalid node type` and no highlighting at all — the queries name nodes
-that version of the grammar does not have. `:checkhealth novo` reports
-a missing parser but cannot tell you about a stale one.
-
-If you have a parser hosted somewhere, point the plugin at it and it
-registers the language for you:
+The plugin registers the grammar for you, so that is the whole install.
+If you would rather manage the parser yourself — building it from a
+novo checkout with `orbit/novo-treesitter/bin/install-nvim.sh`, say —
+turn the registration off:
 
 ```lua
-opts = { treesitter = { parser_url = "https://github.com/you/tree-sitter-novo" } }
+opts = { treesitter = { parser_url = false } }
 ```
+
+**Keep the parser and this plugin in step.** The queries here name
+nodes from a particular version of the grammar. A parser older than the
+queries fails with `Invalid node type` and gives you no highlighting at
+all, rather than degrading. `:checkhealth novo` reports a missing
+parser but cannot tell you about a stale one, so run `:TSUpdate novo`
+after updating the plugin.
 
 ## Configuration
 

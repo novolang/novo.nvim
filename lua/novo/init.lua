@@ -12,7 +12,10 @@ local M = {}
 M.defaults = {
   lsp = { enabled = true, cmd = nil, server = {} },
   dap = { enabled = true, cmd = nil, configurations = nil },
-  treesitter = { enabled = true, parser_url = nil },
+  -- The grammar has its own repository, so nvim-treesitter can install
+  -- the parser itself: `:TSInstall novo`.  Set parser_url = false to
+  -- register nothing and manage the parser by hand.
+  treesitter = { enabled = true, parser_url = "https://github.com/novolang/tree-sitter-novo" },
 }
 
 function M.setup(opts)

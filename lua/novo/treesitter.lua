@@ -1,16 +1,14 @@
 -- Highlighting, folds and text objects.
 --
--- The QUERIES ship here, under `queries/novo/`, because they are small
--- and they belong with the editor integration.  The PARSER does not:
--- `tree-sitter-novo` is built from the grammar in the toolchain's own
--- repository, and until that grammar has a repository of its own there
--- is nothing for nvim-treesitter to clone.  So this registers the
--- language and leaves installing the parser to the user, and
--- `:checkhealth novo` says plainly whether one is present.
+-- The QUERIES ship here, under `queries/novo/`, vendored from
+-- novolang/tree-sitter-novo.  They are a COPY, and the copy has to move
+-- with the grammar: a keyword the grammar learns is still rendered as a
+-- variable until the queries here learn it too, and a query naming a
+-- node an older parser does not have aborts highlighting outright
+-- rather than degrading.  Re-vendor them whenever the grammar moves.
 --
--- What this does NOT do is pretend: a plugin that registered a parser
--- URL nobody can fetch would turn a missing feature into a failing
--- install.
+-- The PARSER comes from that repository, which nvim-treesitter clones
+-- and builds; `:TSInstall novo` is the whole install.
 local M = {}
 
 function M.setup(opts)
@@ -42,7 +40,7 @@ function M.setup(opts)
   if not configs or configs.novo then return end
 
   local url = opts.parser_url
-  if not url then return end   -- nothing to clone yet; see the note above
+  if not url then return end
 
   configs.novo = {
     -- scanner.c is NOT optional: novo is indentation-based, and the
