@@ -75,8 +75,22 @@ optional reads `Some(97)` — from novo 0.8.6 onwards.
 The queries ship here, under `queries/novo/`. The **parser** does not:
 `tree-sitter-novo` is built from the grammar in the toolchain's own
 repository, which does not have a repository of its own yet, so there is
-nothing for `nvim-treesitter` to clone. Until it does, install the
-parser yourself and these queries take effect automatically.
+nothing for `nvim-treesitter` to clone. Until it does, build the
+parser from the grammar in a checkout of the novo repository:
+
+```sh
+bash orbit/novo-treesitter/bin/install-nvim.sh
+```
+
+That writes `novo.so` into `~/.local/share/nvim/site/parser/`, which is
+all this plugin needs; the queries here are found by name and take
+effect on the next `.nv` file you open.
+
+**Rebuild the parser when you update this plugin.** The queries and the
+grammar move together, and a parser older than the queries fails with
+`Invalid node type` and no highlighting at all — the queries name nodes
+that version of the grammar does not have. `:checkhealth novo` reports
+a missing parser but cannot tell you about a stale one.
 
 If you have a parser hosted somewhere, point the plugin at it and it
 registers the language for you:
