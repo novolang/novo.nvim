@@ -24,23 +24,54 @@ function M.setup(opts)
     -- logs go to stderr, which nvim-dap shows in the repl.
   }
 
-  -- One configuration, and it asks for the program rather than guessing.
-  -- A .nv file is not the thing you debug: `novo build --debug` produces
-  -- the binary, and `novo debug` is the one-command path for people who
-  -- are not in an editor.  The default answers the common case — the
-  -- binary beside the file, named after it — without hiding the field.
+  -- Debugging a novo program means debugging the binary the compiler
+  -- produced, not the .nv source, so every configuration has to answer
+  -- "which binary".  `novo build` writes it to `_novo/<stem>` and older
+  -- versions wrote `<stem>` in the working directory, so look in both
+  -- before asking: on the common path the debugger just starts.
+  local function built_binary(prompt_only)
+    return function()
+      local cwd = vim.fn.getcwd()
+      local stem = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t:r")
+      if not prompt_only then
+        for _, candidate in ipairs({ cwd .. "/_novo/" .. stem, cwd .. "/" .. stem }) do
+          if vim.fn.executable(candidate) == 1 then return candidate end
+        end
+      end
+      return vim.fn.input("Path to the compiled binary: ", cwd .. "/_novo/", "file")
+    end
+  end
+
+  -- Stopping at entry is the default because a short program otherwise
+  -- runs to completion before the debug UI has finished opening, which
+  -- reads as "the debugger did nothing".
   dap.configurations.novo = opts.configurations or {
     {
-      name = "Debug the binary beside this file",
+      name = "Debug the built binary (stop at entry)",
       type = "novo",
       request = "launch",
-      program = function()
-        local src = vim.api.nvim_buf_get_name(0)
-        local guess = src:gsub("%.nv$", "")
-        return vim.fn.input("Path to the compiled binary: ", guess, "file")
-      end,
+      program = built_binary(false),
       cwd = "${workspaceFolder}",
+      args = {},
+      stopOnEntry = true,
+    },
+    {
+      name = "Run the built binary (no pause)",
+      type = "novo",
+      request = "launch",
+      program = built_binary(false),
+      cwd = "${workspaceFolder}",
+      args = {},
       stopOnEntry = false,
+    },
+    {
+      name = "Debug a binary I name",
+      type = "novo",
+      request = "launch",
+      program = built_binary(true),
+      cwd = "${workspaceFolder}",
+      args = {},
+      stopOnEntry = true,
     },
   }
 end
