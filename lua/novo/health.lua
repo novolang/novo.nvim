@@ -70,7 +70,7 @@ function M.check()
   else
     warn_("no tree-sitter parser for novo", {
       "highlighting falls back to none; the queries are shipped here and take effect once a parser exists",
-      "the grammar lives in the toolchain repository and does not have one of its own yet",
+      ":TSInstall novo builds it from https://github.com/novolang/tree-sitter-novo, which this plugin registers",
     })
   end
 end

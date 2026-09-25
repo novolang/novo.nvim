@@ -33,27 +33,46 @@ function M.setup(opts)
   -- `.nv` is the `novo` filetype either way (see ftdetect), and neovim
   -- maps filetype to parser language by name, so the queries beside this
   -- file are found once a parser called `novo` exists.
-  local ok, parsers = pcall(require, "nvim-treesitter.parsers")
-  if not ok then return end
-
-  local configs = parsers.get_parser_configs and parsers.get_parser_configs()
-  if not configs or configs.novo then return end
-
   local url = opts.parser_url
   if not url then return end
 
-  configs.novo = {
+  local install_info = {
+    url = url,
     -- scanner.c is NOT optional: novo is indentation-based, and the
     -- external scanner is what emits INDENT, DEDENT and NEWLINE.  A
     -- parser built from parser.c alone links, loads, and then fails to
     -- parse anything with a block in it.
-    install_info = {
-      url = url,
-      files = { "src/parser.c", "src/scanner.c" },
-      branch = "main",
-    },
-    filetype = "novo",
+    files = { "src/parser.c", "src/scanner.c" },
+    branch = "main",
   }
+
+  local ok, parsers = pcall(require, "nvim-treesitter.parsers")
+  if not ok then return end
+
+  -- nvim-treesitter has two lines.  The `master` branch keeps its
+  -- parser table behind get_parser_configs(); the `main` branch, the
+  -- rewrite most installs run now, is the table itself and asks a
+  -- custom parser to be added inside a `User TSUpdate` autocommand, so
+  -- that a `:TSUpdate` can rebuild it.  Registering on the wrong line
+  -- registers nothing, and `:TSInstall novo` then answers that no such
+  -- language exists.  Both lines are served.
+  if parsers.get_parser_configs then
+    local configs = parsers.get_parser_configs()
+    if configs and not configs.novo then
+      configs.novo = { install_info = install_info, filetype = "novo" }
+    end
+    return
+  end
+
+  local function register()
+    if not parsers.novo then parsers.novo = { install_info = install_info } end
+  end
+  register()
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "TSUpdate",
+    group = vim.api.nvim_create_augroup("NovoTreesitterRegister", { clear = true }),
+    callback = register,
+  })
 end
 
 return M

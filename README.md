@@ -7,13 +7,19 @@ debugger, and the highlighting queries.
 -- lazy.nvim
 {
   "novolang/novo.nvim",
-  ft = "novo",
+  lazy = false,
   opts = {},
 }
 ```
 
 That is the whole install. It finds whatever toolchain you have and
-configures nothing you did not ask for.
+configures nothing you did not ask for. It loads at startup rather
+than on the first `.nv` buffer because `:checkhealth novo` runs the
+health check shipped here, and a plugin lazy.nvim has not loaded yet
+has no health check to run: with `ft = "novo"` the command answers
+"No healthcheck found" until a novo file has been opened. Startup
+costs nothing measurable, since the plugin registers a filetype, a
+server and a parser and starts none of them.
 
 ## What you get
 
@@ -80,7 +86,11 @@ parser comes from that repository, and nvim-treesitter can install it:
 :TSInstall novo
 ```
 
-The plugin registers the grammar for you, so that is the whole install.
+The plugin registers the grammar for you, on either line of
+nvim-treesitter (the `master` branch and the `main` rewrite), so that
+is the whole install. The `main` branch compiles the parser with your C
+compiler and needs no tree-sitter CLI, since the repository carries
+the generated sources.
 If you would rather manage the parser yourself — building it from a
 novo checkout with `orbit/novo-treesitter/bin/install-nvim.sh`, say —
 turn the registration off:

@@ -6,6 +6,7 @@
 
 ; ── Comments ───────────────────────────────────────────────────────
 (line_comment) @comment
+(hash_comment) @comment
 (block_comment) @comment
 (doc_comment) @comment.documentation
 (shebang) @keyword.directive
@@ -36,6 +37,25 @@
   "nfr"
   "constraint"
   "pub"
+  ; The embedded surface, added with its productions 2026-09-09.  A
+  ; keyword the grammar does not model is not an ERROR — it matches the
+  ; identifier rule — so these used to colour as variables and the
+  ; misparse was invisible.
+  ; bugs/tooling/closed/treesitter-grammar-behind-lexer.md
+  "static"
+  "system"
+  "asm"
+  "clobbers"
+  "region"
+  "size"
+  "section"
+  "load_to"
+  "pad_to"
+  "entry_point"
+  "irq"
+  "irqs"
+  "vector"
+  "from"
 ] @keyword
 
 ; `else`, `pass`, `break`, `continue` are single-token rules so
@@ -81,7 +101,16 @@
   ; `type` is reserved but never a declaration, so it is not a node
   ; this grammar produces and cannot be matched here.
   "alias"
+  ; The hardware declarations.  `bsp` is BOTH a declaration keyword and
+  ; the head of the `bsp.*` stdlib module; the module head is its own
+  ; node (`bsp_ns`) so it colours as a module below rather than here.
+  "bsp"
+  "peripheral"
+  "memory_map"
+  "vector_table"
 ] @keyword.type
+
+(bsp_ns) @module
 
 ; Compound assignment operators — colour as @operator.assignment
 ; for editors that distinguish from plain @operator.
