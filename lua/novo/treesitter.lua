@@ -64,8 +64,13 @@ function M.setup(opts)
     return
   end
 
+  -- The installer clears the parser module from package.loaded and
+  -- requires it again before it fires TSUpdate, so the table captured
+  -- above is the old one by then.  The handler asks for the module
+  -- afresh each time, and writes into whatever table is current.
   local function register()
-    if not parsers.novo then parsers.novo = { install_info = install_info } end
+    local table_now = require("nvim-treesitter.parsers")
+    if not table_now.novo then table_now.novo = { install_info = install_info } end
   end
   register()
   vim.api.nvim_create_autocmd("User", {
