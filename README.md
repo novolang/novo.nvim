@@ -42,6 +42,11 @@ says which of those is true for you:
 It reports each binary with its version and where it was found, and
 names the fix for anything missing.
 
+Hover (`K`) on a name shows its declaration's signature and the comment
+written above it, whether it is declared in the buffer, another module
+of the package or a dependency, and go-to-definition opens the
+declaring file, a dependency's copy in the package cache included.
+
 ## Installing the toolchain
 
 ```sh
