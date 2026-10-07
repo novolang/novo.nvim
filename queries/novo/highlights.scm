@@ -43,6 +43,10 @@
   ; misparse was invisible.
   ; bugs/tooling/closed/treesitter-grammar-behind-lexer.md
   "static"
+  ; `readonly` in front of a return type (SPEC §4.3); a name elsewhere.
+  "readonly"
+  ; `wrapping` opening a block (SPEC § 13.2); a name elsewhere.
+  "wrapping"
   "system"
   "asm"
   "clobbers"
@@ -56,6 +60,15 @@
   "irqs"
   "vector"
   "from"
+  ; A register array's step, and the board declaration's two tables
+  ; with the words of a device line.  Each is a keyword only inside its
+  ; declaration and a name everywhere else.
+  "stride"
+  "board"
+  "devices"
+  "on"
+  "addr"
+  "cs"
 ] @keyword
 
 ; `else`, `pass`, `break`, `continue` are single-token rules so
@@ -263,6 +276,15 @@
   category: _ @keyword)
 (req_field
   key: (identifier) @property)
+
+; The board declaration's names: a pin and a device are what a program
+; reads as `bsp.board.<name>()`, and a device's driver is a type.
+(bsp_pin
+  name: (identifier) @constant)
+(bsp_device
+  name: (identifier) @constant)
+(bsp_device
+  driver: (identifier) @type)
 
 ; Const decl name + frame name.
 (const_decl
