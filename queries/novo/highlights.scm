@@ -69,6 +69,7 @@
   "on"
   "addr"
   "cs"
+  "en"
   "len"
 ] @keyword
 
