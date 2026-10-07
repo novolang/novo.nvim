@@ -69,6 +69,7 @@
   "on"
   "addr"
   "cs"
+  "len"
 ] @keyword
 
 ; `else`, `pass`, `break`, `continue` are single-token rules so
