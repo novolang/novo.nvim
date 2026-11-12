@@ -30,6 +30,7 @@
 (states_block) @indent.begin
 (events_block) @indent.begin
 (transitions_block) @indent.begin
+(asm_stmt) @indent.begin
 
 ; ── Dedent triggers ───────────────────────────────────────────────
 ; `else` / `elif` should sit at the same indent as the matching

@@ -50,11 +50,16 @@
   "system"
   "asm"
   "clobbers"
+  ; The operand lines of an `asm` block; words only inside it.
+  "input"
+  "output"
+  "clobber"
   "region"
   "size"
   "section"
   "load_to"
   "pad_to"
+  "words"
   "entry_point"
   "irq"
   "irqs"
@@ -69,8 +74,8 @@
   "on"
   "addr"
   "cs"
-  "en"
   "len"
+  "en"
 ] @keyword
 
 ; `else`, `pass`, `break`, `continue` are single-token rules so
@@ -121,6 +126,9 @@
   ; node (`bsp_ns`) so it colours as a module below rather than here.
   "bsp"
   "peripheral"
+  ; `peripheral type NAME` (SPEC § 17.1), the one place the grammar
+  ; spells the reserved word `type`.
+  "type"
   "memory_map"
   "vector_table"
 ] @keyword.type
@@ -247,6 +255,9 @@
   (identifier) @type
   (#match? @type "^[A-Z]"))
 
+; `()` as a type is the unit type (SPEC § 3.1), a built-in like `Unit`.
+(unit_type) @type.builtin
+
 ; Type names in struct / enum decls.
 (struct_decl
   name: (identifier) @type)
@@ -303,6 +314,13 @@
 ; Struct literal type name (`Foo { ... }`) — colour as type.
 (struct_literal
   type: (identifier) @type)
+
+; Module qualifier of a struct literal (`csip.Foo { ... }`).
+(struct_literal
+  module: (identifier) @module)
+
+; Tuple position (`pair.0`).
+(tuple_index) @number
 
 ; Struct literal field labels.
 (struct_literal_field
