@@ -25,6 +25,7 @@
 (match_stmt)         @local.scope
 (match_arm)          @local.scope
 (block)              @local.scope
+(struct_body)        @local.scope
 
 ; ── Definitions ────────────────────────────────────────────────────
 ; Identifiers introduced by these constructs.  Captures bind the
@@ -54,6 +55,9 @@
   name: (identifier) @local.definition.type)
 
 (state_machine_decl
+  name: (identifier) @local.definition.type)
+
+(associated_type
   name: (identifier) @local.definition.type)
 
 (closure_params

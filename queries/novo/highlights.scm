@@ -118,16 +118,17 @@
   "impl"
   "state_machine"
   ; The type-alias keyword (SPEC §3.10).  `alias` is the one spelling;
-  ; `type` is reserved but never a declaration, so it is not a node
-  ; this grammar produces and cannot be matched here.
+  ; `type` is reserved for the associated type of a trait or an impl
+  ; (the `associated_type` node, listed with the keyword below) and for
+  ; `peripheral type`.
   "alias"
   ; The hardware declarations.  `bsp` is BOTH a declaration keyword and
   ; the head of the `bsp.*` stdlib module; the module head is its own
   ; node (`bsp_ns`) so it colours as a module below rather than here.
   "bsp"
   "peripheral"
-  ; `peripheral type NAME` (SPEC § 17.1), the one place the grammar
-  ; spells the reserved word `type`.
+  ; `peripheral type NAME` (SPEC § 17.1) and the associated type of a
+  ; trait or an impl body (SPEC § 3.7.1).
   "type"
   "memory_map"
   "vector_table"
@@ -310,6 +311,10 @@
 ; Struct-field labels (`x: Float`).
 (struct_field
   name: (identifier) @variable.member)
+
+; The name of an associated type (`type Item`, `type Out = Str`).
+(associated_type
+  name: (identifier) @type.definition)
 
 ; Struct literal type name (`Foo { ... }`) — colour as type.
 (struct_literal

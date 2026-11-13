@@ -25,6 +25,7 @@
 
 ; ── Block / multi-line literals ──────────────────────────────────
 (block) @fold
+(struct_body) @fold
 ; The operand lines of an `asm` block.
 (asm_block) @fold
 (block_comment) @fold
