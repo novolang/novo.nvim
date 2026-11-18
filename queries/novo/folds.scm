@@ -10,6 +10,7 @@
 (trait_decl) @fold
 (impl_decl) @fold
 (state_machine_decl) @fold
+(active_decl) @fold
 (register_decl) @fold
 (error_kind_decl) @fold
 

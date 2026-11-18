@@ -17,6 +17,7 @@
 (trait_decl) @indent.begin
 (impl_decl) @indent.begin
 (state_machine_decl) @indent.begin
+(active_decl) @indent.begin
 (register_decl) @indent.begin
 (error_kind_decl) @indent.begin
 (if_stmt) @indent.begin
@@ -30,6 +31,8 @@
 (states_block) @indent.begin
 (events_block) @indent.begin
 (transitions_block) @indent.begin
+(fields_block) @indent.begin
+(machine_hook_block) @indent.begin
 (asm_stmt) @indent.begin
 
 ; ── Dedent triggers ───────────────────────────────────────────────

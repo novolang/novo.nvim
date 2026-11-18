@@ -28,6 +28,19 @@
   "states"
   "events"
   "transitions"
+  "fields"
+  "enter"
+  "exit"
+  "after"
+  ; The words of the body of an `active` declaration (SPEC 11.13).
+  "queue"
+  "priority"
+  "timers"
+  "tier"
+  "event"
+  "machine"
+  "on_start"
+  "on_event"
   "frame"
   "prompt"
   "unsafe_discharge"
@@ -110,6 +123,12 @@
 [
   "fn"
 ] @keyword.function
+
+; The first word of an `active` declaration is an identifier, since the word
+; is contextual (SPEC 11.13).
+((active_decl
+   keyword: (identifier) @keyword)
+ (#eq? @keyword "active"))
 
 [
   "struct"
